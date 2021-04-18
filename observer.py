@@ -29,5 +29,5 @@ class ColumnSum(Observer):
 
 	def update(self):
 		sum = np.sum(self.subject.getState()[self.column])
-		SumLabel = tk.Label(text=sum).place(x=100,y=10)
+		SumLabel = tk.Label(text=sum).place(x=100,y=400)
 		
