@@ -6,7 +6,6 @@ class Subject():
 	""" Subject"""
 	def __init__(self):
 		self.observers = []
-		print("elkészültem")
 
 	def attach(self,Observer):
 		self.observers.append(Observer)
