@@ -27,17 +27,14 @@ def main():
 	root.mainloop()
 
 def load(file):
-	label = tk.Label()
-	label.place(x=250,y=400)
 	try:
 		dataset = subject.Dataset(file)
 		summary = observer.Summary(dataset)
 		columnSum = observer.ColumnSum(dataset,"Survived")
 		dataset.attach(summary)
 		dataset.attach(columnSum)
-		label.destroy()
-	except:
-		label.config(text="wrong file name! try again.")
+	except FileNotFoundError:
+		print("wrong file name! try again.")
 
 if __name__ == "__main__":
     main()

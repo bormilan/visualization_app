@@ -18,8 +18,19 @@ class Summary(Observer):
 		super().__init__(Subject)
 
 	def update(self):
+		title = tk.Label(text="Summary:")
+		title.config(width=8,height=2)
+		title.config(font=("Courier", 15))
+		title.place(x=1000-450,y=700-150-70)
+		title.config(bg="tomato3")
+		title.config(relief="solid")
+
 		summary = self.subject.getState().head()
-		SummaryLabel = tk.Label(text=summary).place(x=100,y=200)
+		SummaryLabel = tk.Label(text=summary)
+		SummaryLabel.place(x=1000-450,y=700-150)
+		SummaryLabel.config(bg="thistle2")
+		SummaryLabel.config(relief="solid")
+		SummaryLabel.config(width=60,height=9)
 
 class ColumnSum(Observer):
 	"""SurvivedSum"""
@@ -29,5 +40,6 @@ class ColumnSum(Observer):
 
 	def update(self):
 		sum = np.sum(self.subject.getState()[self.column])
-		SumLabel = tk.Label(text=sum).place(x=100,y=400)
+		SumLabel = tk.Label(text=sum)
+		SumLabel.place(x=100,y=400)
 		
