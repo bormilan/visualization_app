@@ -23,14 +23,14 @@ class Summary(Observer):
 		title1.config(width=8,height=2)
 		title1.config(font=("Courier", 15))
 		title1.place(x=1000-520,y=700-180-70)		
-		title1.config(relief="solid")
+		title1.config(relief="groove")
 		title1.config(command=lambda: self.setMode(0))
 
 		title2 = tk.Button(text="Describe")
 		title2.config(width=8,height=2)
 		title2.config(font=("Courier", 15))
 		title2.place(x=1000-400,y=700-180-70)		
-		title2.config(relief="solid")
+		title2.config(relief="groove")
 		title2.config(command=lambda: self.setMode(1))
 
 		if self.mode == 0:
@@ -60,13 +60,20 @@ class Summary(Observer):
 			self.mode = 1
 			self.update()
 
-class ColumnSum(Observer):
+class Column(Observer):
 	"""SurvivedSum"""
-	def __init__(self, Subject, column):
+	def __init__(self, Subject):
 		super().__init__(Subject)
-		self.column = column
+		self.column = ""
 
 	def update(self):
-		sum = np.sum(self.subject.getState()[self.column])
-		SumLabel = tk.Label(text=sum)
-		SumLabel.place(x=100,y=400)
+		columnLabel = tk.Label()
+		try:
+			sum = np.sum(self.subject.getState()[self.column])
+			columnLabel.config(text=sum)
+		except:
+			columnLabel.config(text="nincs oszlop kiválasztva")
+		columnLabel.place(x=10,y=520)
+		columnLabel.config(bg="thistle2")
+		columnLabel.config(relief="solid")
+		columnLabel.config(width=40,height=10)

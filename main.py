@@ -30,7 +30,7 @@ def load(file):
 	try:
 		dataset = subject.Dataset(file)
 		summary = observer.Summary(dataset)
-		columnSum = observer.ColumnSum(dataset,"Survived")
+		columnSum = observer.Column(dataset)
 		dataset.attach(summary)
 		dataset.attach(columnSum)
 	except FileNotFoundError:
