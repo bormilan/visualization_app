@@ -19,7 +19,8 @@ class Summary(Observer):
 		self.mode = 0
 
 	def update(self): 
-		title1 = tk.Button(text="Summary")
+		#Buttons
+		title1 = tk.Button(text="Head")
 		title1.config(width=8,height=2)
 		title1.config(font=("Courier", 15))
 		title1.place(x=1000-520,y=700-180-70)		
@@ -33,6 +34,7 @@ class Summary(Observer):
 		title2.config(relief="groove")
 		title2.config(command=lambda: self.setMode(1))
 
+		#Button colors
 		if self.mode == 0:
 			title1.config(bg="tomato3")
 			title2.config(bg="dim gray")
@@ -40,18 +42,21 @@ class Summary(Observer):
 			title1.config(bg="dim gray")
 			title2.config(bg="tomato3")
 
+		#Label
 		SummaryLabel = tk.Label(text=self.getSummary())
 		SummaryLabel.place(x=1000-520,y=700-180)
 		SummaryLabel.config(bg="thistle2")
 		SummaryLabel.config(relief="solid")
 		SummaryLabel.config(width=70,height=10)
 
+	#function to get the data from subject
 	def getSummary(self):
 		if self.mode == 0:	
 			return self.subject.getState().head()
 		else:
 			return self.subject.getState().describe()
 
+	#function to change label mode
 	def setMode(self,newMode):
 		if newMode == 0:
 			self.mode = 0
@@ -68,6 +73,7 @@ class Column(Observer):
 
 	def update(self):
 		columnLabel = tk.Label()
+		#error if no columns selected
 		try:
 			sum = np.sum(self.subject.getState()[self.column])
 			columnLabel.config(text=sum)
