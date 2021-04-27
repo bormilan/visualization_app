@@ -10,15 +10,17 @@ class MainApp(tk.Frame):
     	self.root.geometry("1000x700")
     	self.root.config(bg="papaya whip")
     	
-    	self.entry = tk.Text(bg="cyan3",width=30,height=2)
-    	self.entry.place(x=10,y=10)
+    	self.entry = tk.Entry(bg="cyan3")
+    	self.entry.place(x=10,y=10,width=200,height=30)
     	self.button = tk.Button(bg="tomato3",
     		text="Ok",
     		width="15",
     		height="2",
     		relief="groove",
-    		command=lambda: load(self.entry.get("1.0","end-1c")))
-    	self.button.place(x=10,y=50)			
+    		command=lambda: load(self.entry.get()))
+    	self.button.place(x=10,y=50)	
+    	self.entry.bind('<Return>',lambda event: load(self.entry.get()))
+
 
 def main():
 	root = tk.Tk()
