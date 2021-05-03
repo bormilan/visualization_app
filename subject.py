@@ -23,10 +23,15 @@ class Subject():
 		pass
 
 class Dataset(Subject):
-
 	def __init__(self,path):
 		super().__init__()
-		self.data = pd.read_csv(path)
+		if '.csv' in path:
+			self.data = pd.read_csv(path)
+		elif '.xls' in path:
+			self.data = pd.read_excel(path)
+			print('szia lajos')
+		else:
+			print("nem megfelelő fájl !")
 
 	def getState(self):
 		return self.data
