@@ -33,8 +33,11 @@ def load(file):
 		dataset = subject.Dataset(file)
 		summary = observer.Summary(dataset)
 		columnSum = observer.Column(dataset)
+		diagram = observer.Diagram(dataset)
+
 		dataset.attach(summary)
 		dataset.attach(columnSum)
+		dataset.attach(diagram)
 	except FileNotFoundError:
 		print("wrong file name! try again.")
 

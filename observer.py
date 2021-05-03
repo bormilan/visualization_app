@@ -3,7 +3,7 @@ import abc
 import numpy as np
 import tkinter as tk
 
-class Observer():
+class Observer(object):
 	"""Observer"""
 	def __init__(self,Subject):
 		self.subject = Subject
@@ -148,3 +148,42 @@ class Column(Observer):
 			return np.sum(self.subject.getState()[self.column])
 		else:
 			return self.subject.getState()[self.column].dtypes
+
+class Diagram(Observer):
+	"""docstring for Diagram"""
+	def __init__(self, Subject):
+		super().__init__(Subject)
+		self.column1 = ""
+		self.column2 = ""
+
+		#---DIAGRAM LABEL---#
+		self.diagramLabel = tk.Label()
+		self.diagramLabel.config(text="nincsenek oszlopok kiválsztva")
+		self.diagramLabel.place(x=500,y=20)
+		self.diagramLabel.config(bg="thistle2")
+		self.diagramLabel.config(relief="solid")
+		self.diagramLabel.config(width=20,height=5)
+
+		#---USER INPUTS---#
+		self.firstColumnEntry = tk.Entry(bg="cyan3")
+		self.firstColumnEntry.place(x=10,y=150,width=100,height=30)
+
+		self.secondColumnEntry = tk.Entry(bg="cyan3")
+		self.secondColumnEntry.place(x=120,y=150,width=100,height=30)
+
+		#---OK BUTTON---#
+		self.button = tk.Button(text="Ok")
+		self.button.config(width=3,height=1)
+		self.button.config(font=("Courier", 15))
+		self.button.place(x=10,y=200)		
+		self.button.config(relief="groove")
+		self.button.config(bg="tomato3")
+		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
+
+	def update(self):
+		self.diagramLabel.config(text=f"{self.column1} ~ {self.column2}")
+
+	def setColumn(self,column1,column2):
+		self.column1 = column1
+		self.column2 = column2
+		self.update()
