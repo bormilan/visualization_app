@@ -7,7 +7,7 @@ class MainApp(tk.Frame):
     	tk.Frame.__init__(self, root)
     	self.root = root
     	self.root.title("VisualizationApp")
-    	self.root.geometry("1000x700")
+    	self.root.geometry("1500x1200")
     	self.root.config(bg="papaya whip")
     	
     	self.entry = tk.Entry(bg="cyan3")

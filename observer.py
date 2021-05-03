@@ -2,6 +2,7 @@
 import abc
 import numpy as np
 import tkinter as tk
+import pandas as pd
 
 class Observer(object):
 	"""Observer"""
@@ -79,21 +80,21 @@ class Column(Observer):
 		#---CONTENT LABEL---#
 		self.columnLabel = tk.Label()
 		self.columnLabel.config(text="nincs oszlop kiválasztva")
-		self.columnLabel.place(x=10,y=600)
+		self.columnLabel.place(x=10,y=900)
 		self.columnLabel.config(bg="thistle2")
 		self.columnLabel.config(relief="solid")
 		self.columnLabel.config(width=20,height=5)
 
 		#---COLUMN NAME ENTRY---#
 		self.entry = tk.Entry(bg="cyan3")
-		self.entry.place(x=10,y=560,width=100,height=30)
+		self.entry.place(x=10,y=860,width=100,height=30)
 		self.entry.bind('<Return>',(lambda event: self.setColumn(self.entry.get())))
 
 		#---OK BUTTON---#
 		self.button = tk.Button(text="Ok")
 		self.button.config(width=3,height=1)
 		self.button.config(font=("Courier", 15))
-		self.button.place(x=120,y=550)		
+		self.button.place(x=120,y=850)		
 		self.button.config(relief="groove")
 		self.button.config(bg="tomato3")
 		self.button.config(command=lambda: self.setColumn(self.entry.get()))
@@ -103,7 +104,7 @@ class Column(Observer):
 		self.sum = tk.Button(text="Sum")
 		self.sum.config(width=6,height=1)
 		self.sum.config(font=("Courier", 15))
-		self.sum.place(x=180,y=600)		
+		self.sum.place(x=180,y=900)		
 		self.sum.config(relief="groove")		
 		self.sum.config(command=lambda: self.setMode(0))
 
@@ -111,7 +112,7 @@ class Column(Observer):
 		self.type = tk.Button(text="type")
 		self.type.config(width=6,height=1)
 		self.type.config(font=("Courier", 15))
-		self.type.place(x=180,y=650)		
+		self.type.place(x=180,y=950)		
 		self.type.config(relief="groove")
 		self.type.config(command=lambda: self.setMode(1))
 
@@ -156,6 +157,9 @@ class Diagram(Observer):
 		self.column1 = ""
 		self.column2 = ""
 
+		#drop all na's
+		self.subject = self.subject.data.dropna()
+
 		#---DIAGRAM LABEL---#
 		self.diagramLabel = tk.Label()
 		self.diagramLabel.config(text="nincsenek oszlopok kiválsztva")
@@ -164,18 +168,24 @@ class Diagram(Observer):
 		self.diagramLabel.config(relief="solid")
 		self.diagramLabel.config(width=20,height=5)
 
+		#---INPUT LABEL---#
+		self.inputLabel = tk.Label()
+		self.inputLabel.config(text="Korreláció Diagram")
+		self.inputLabel.place(x=10,y=130)
+
 		#---USER INPUTS---#
 		self.firstColumnEntry = tk.Entry(bg="cyan3")
-		self.firstColumnEntry.place(x=10,y=150,width=100,height=30)
+		self.firstColumnEntry.config(text="oszlop neve")
+		self.firstColumnEntry.place(x=10,y=170,width=100,height=30)
 
 		self.secondColumnEntry = tk.Entry(bg="cyan3")
-		self.secondColumnEntry.place(x=120,y=150,width=100,height=30)
+		self.secondColumnEntry.place(x=120,y=170,width=100,height=30)
 
 		#---OK BUTTON---#
 		self.button = tk.Button(text="Ok")
 		self.button.config(width=3,height=1)
 		self.button.config(font=("Courier", 15))
-		self.button.place(x=10,y=200)		
+		self.button.place(x=10,y=220)		
 		self.button.config(relief="groove")
 		self.button.config(bg="tomato3")
 		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
