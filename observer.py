@@ -3,6 +3,8 @@ import abc
 import numpy as np
 import tkinter as tk
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Observer(object):
 	"""Observer"""
@@ -24,7 +26,7 @@ class Summary(Observer):
 		self.head = tk.Button(text="Head")
 		self.head.config(width=8,height=2)
 		self.head.config(font=("Courier", 15))
-		self.head.place(x=1000-520,y=700-180-70)		
+		self.head.place(x=350,y=780)		
 		self.head.config(relief="groove")		
 		self.head.config(command=lambda: self.setMode(0))
 
@@ -32,13 +34,13 @@ class Summary(Observer):
 		self.describe = tk.Button(text="Describe")
 		self.describe.config(width=8,height=2)
 		self.describe.config(font=("Courier", 15))
-		self.describe.place(x=1000-400,y=700-180-70)		
+		self.describe.place(x=480,y=780)		
 		self.describe.config(relief="groove")
 		self.describe.config(command=lambda: self.setMode(1))
 
 		#---CONTENT LABEL---#
 		self.SummaryLabel = tk.Label()
-		self.SummaryLabel.place(x=1000-520,y=700-180)
+		self.SummaryLabel.place(x=350,y=850)
 		self.SummaryLabel.config(bg="thistle2")
 		self.SummaryLabel.config(relief="solid")
 		self.SummaryLabel.config(width=70,height=10)
@@ -156,17 +158,10 @@ class Diagram(Observer):
 		super().__init__(Subject)
 		self.column1 = ""
 		self.column2 = ""
+		self.isCurrent = False
 
 		#drop all na's
 		self.subject = self.subject.data.dropna()
-
-		#---DIAGRAM LABEL---#
-		self.diagramLabel = tk.Label()
-		self.diagramLabel.config(text="nincsenek oszlopok kiválsztva")
-		self.diagramLabel.place(x=500,y=20)
-		self.diagramLabel.config(bg="thistle2")
-		self.diagramLabel.config(relief="solid")
-		self.diagramLabel.config(width=20,height=5)
 
 		#---INPUT LABEL---#
 		self.inputLabel = tk.Label()
@@ -191,7 +186,21 @@ class Diagram(Observer):
 		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
 
 	def update(self):
-		self.diagramLabel.config(text=f"{self.column1} ~ {self.column2}")
+		#---UPDATE PLOT---#
+		plot = plt.Figure(figsize=(4,3), dpi=100)
+
+		if self.isCurrent:
+			plt.close(fig=plot)
+			
+		if self.column1 != "" and self.column2 != "":
+			ax = plot.add_subplot(111)
+			chart_type = FigureCanvasTkAgg(plot)
+			chart_type.get_tk_widget().place(x=10,y=280)				
+			df = self.subject[[self.column1,self.column2]]
+			df.plot(kind='line', legend=True, ax=ax)
+			ax.set_title(f"{self.column1} ~ {self.column2}")
+
+			self.isCurrent = True
 
 	def setColumn(self,column1,column2):
 		self.column1 = column1
