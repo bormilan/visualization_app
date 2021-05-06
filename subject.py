@@ -31,7 +31,7 @@ class Dataset(Subject):
 			self.data = pd.read_excel(path)
 			print('szia lajos')
 		else:
-			print("nem megfelelő fájl !")
+			print("nem megfelelő a fájl kiterjesztése !")
 
 	def getState(self):
 		return self.data

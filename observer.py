@@ -43,7 +43,7 @@ class Summary(Observer):
 		self.SummaryLabel.place(x=350,y=850)
 		self.SummaryLabel.config(bg="thistle2")
 		self.SummaryLabel.config(relief="solid")
-		self.SummaryLabel.config(width=70,height=10)
+		self.SummaryLabel.config(width=100,height=10)
 
 	def update(self): 		
 		#Button colors
@@ -78,6 +78,9 @@ class Column(Observer):
 		super().__init__(Subject)
 		self.column = ""
 		self.mode = 0
+
+		#---COLUMN LIST---#
+		self.columnList = tk.Listbox()
 
 		#---CONTENT LABEL---#
 		self.columnLabel = tk.Label()
@@ -138,6 +141,15 @@ class Column(Observer):
 			self.sum.config(bg="dim gray")
 			self.type.config(bg="tomato3")
 
+		#list label
+		
+		#---COLUMN LIST---#
+		for column in self.subject.getState().columns:
+			self.columnList.insert(tk.END,column)
+		self.columnList.place(x=10,y=650)
+		self.columnList.config(width=30,height=10)
+		self.columnList.config(bg="thistle2")
+
 	def setMode(self,newMode):
 		if newMode == 0:
 			self.mode = 0
@@ -161,7 +173,7 @@ class Diagram(Observer):
 		self.isCurrent = False
 
 		#drop all na's
-		self.subject = self.subject.data.dropna()
+		self.subject = self.subject.getState().dropna()
 
 		#---INPUT LABEL---#
 		self.inputLabel = tk.Label()
@@ -170,7 +182,6 @@ class Diagram(Observer):
 
 		#---USER INPUTS---#
 		self.firstColumnEntry = tk.Entry(bg="cyan3")
-		self.firstColumnEntry.config(text="oszlop neve")
 		self.firstColumnEntry.place(x=10,y=170,width=100,height=30)
 
 		self.secondColumnEntry = tk.Entry(bg="cyan3")
@@ -192,7 +203,7 @@ class Diagram(Observer):
 		if self.isCurrent:
 			plt.close(fig=plot)
 			
-		if self.column1 != "" and self.column2 != "":
+		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
 			chart_type = FigureCanvasTkAgg(plot)
 			chart_type.get_tk_widget().place(x=10,y=280)				
@@ -201,8 +212,117 @@ class Diagram(Observer):
 			ax.set_title(f"{self.column1} ~ {self.column2}")
 
 			self.isCurrent = True
+		elif self.column1 != "":
+			print("hibás oszlopok vannak megadva !")
 
 	def setColumn(self,column1,column2):
 		self.column1 = column1
 		self.column2 = column2
 		self.update()
+
+class Barplot(Observer):
+	"""Barplot observer"""
+	def __init__(self, Subject):
+		super().__init__(Subject)
+		self.column1 = ""
+		self.column2 = ""
+		self.isCurrent = False
+
+		#drop all na's
+		self.subject = self.subject.getState().dropna()
+
+		#---INPUT LABEL---#
+		self.inputLabel = tk.Label()
+		self.inputLabel.config(text="Barplot Diagram")
+		self.inputLabel.place(x=450,y=130)
+
+		#---USER INPUTS---#
+		self.firstColumnEntry = tk.Entry(bg="cyan3")
+		self.firstColumnEntry.place(x=450,y=170,width=100,height=30)
+
+		self.secondColumnEntry = tk.Entry(bg="cyan3")
+		self.secondColumnEntry.place(x=570,y=170,width=100,height=30)
+
+		#---OK BUTTON---#
+		self.button = tk.Button(text="Ok")
+		self.button.config(width=3,height=1)
+		self.button.config(font=("Courier", 15))
+		self.button.place(x=450,y=220)		
+		self.button.config(relief="groove")
+		self.button.config(bg="tomato3")
+		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
+
+	def update(self):
+		#---UPDATE PLOT---#
+		plot = plt.Figure(figsize=(4,3))
+			
+		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
+			ax = plot.add_subplot(111)
+			chart_type = FigureCanvasTkAgg(plot)
+			chart_type.get_tk_widget().place(x=450,y=280)				
+			df = self.subject.groupby(self.column1)[self.column2].sum()
+			df.plot(kind='bar', legend=True, ax=ax)
+			ax.set_title(f"")
+
+			self.isCurrent = True
+		elif self.column1 != "":
+			print("hibás oszlopok vannak megadva !")
+
+	def setColumn(self,column1,column2):
+		self.column1 = column1
+		self.column2 = column2
+		self.update()
+
+class Scatterplot(Observer):
+	"""Scatterplot observer"""
+	def __init__(self, Subject):
+		super().__init__(Subject)
+		self.column1 = ""
+		self.column2 = ""
+		self.isCurrent = False
+
+		#drop all na's
+		self.subject = self.subject.getState().dropna()
+
+		#---INPUT LABEL---#
+		self.inputLabel = tk.Label()
+		self.inputLabel.config(text="Scatterplot Diagram")
+		self.inputLabel.place(x=890,y=130)
+
+		#---USER INPUTS---#
+		self.firstColumnEntry = tk.Entry(bg="cyan3")
+		self.firstColumnEntry.place(x=890,y=170,width=100,height=30)
+
+		self.secondColumnEntry = tk.Entry(bg="cyan3")
+		self.secondColumnEntry.place(x=1010,y=170,width=100,height=30)
+
+		#---OK BUTTON---#
+		self.button = tk.Button(text="Ok")
+		self.button.config(width=3,height=1)
+		self.button.config(font=("Courier", 15))
+		self.button.place(x=890,y=220)		
+		self.button.config(relief="groove")
+		self.button.config(bg="tomato3")
+		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
+
+	def update(self):
+		#---UPDATE PLOT---#
+		plot = plt.Figure(figsize=(4,3))
+			
+		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
+			ax = plot.add_subplot(111)
+			chart_type = FigureCanvasTkAgg(plot)
+			chart_type.get_tk_widget().place(x=890,y=280)				
+			df = self.subject.groupby(self.column1)[self.column2].sum()
+			df.plot(kind='bar', legend=True, ax=ax)
+			ax.set_title(f"")
+
+			self.isCurrent = True
+		elif self.column1 != "":
+			print("hibás oszlopok vannak megadva !")
+
+	def setColumn(self,column1,column2):
+		self.column1 = column1
+		self.column2 = column2
+		self.update()
+

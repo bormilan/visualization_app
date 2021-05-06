@@ -34,10 +34,14 @@ def load(file):
 		summary = observer.Summary(dataset)
 		columnSum = observer.Column(dataset)
 		diagram = observer.Diagram(dataset)
+		barplot = observer.Barplot(dataset)
+		scatterplot = observer.Scatterplot(dataset)
 
 		dataset.attach(summary)
 		dataset.attach(columnSum)
 		dataset.attach(diagram)
+		dataset.attach(barplot)
+		dataset.attach(scatterplot)
 	except FileNotFoundError:
 		print("wrong file name! try again.")
 
