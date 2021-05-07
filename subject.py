@@ -29,7 +29,6 @@ class Dataset(Subject):
 			self.data = pd.read_csv(path)
 		elif '.xls' in path:
 			self.data = pd.read_excel(path)
-			print('szia lajos')
 		else:
 			print("nem megfelelő a fájl kiterjesztése !")
 

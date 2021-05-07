@@ -85,21 +85,21 @@ class Column(Observer):
 		#---CONTENT LABEL---#
 		self.columnLabel = tk.Label()
 		self.columnLabel.config(text="nincs oszlop kiválasztva")
-		self.columnLabel.place(x=10,y=900)
+		self.columnLabel.place(x=10,y=910)
 		self.columnLabel.config(bg="thistle2")
 		self.columnLabel.config(relief="solid")
 		self.columnLabel.config(width=20,height=5)
 
 		#---COLUMN NAME ENTRY---#
 		self.entry = tk.Entry(bg="cyan3")
-		self.entry.place(x=10,y=860,width=100,height=30)
+		self.entry.place(x=10,y=870,width=100,height=30)
 		self.entry.bind('<Return>',(lambda event: self.setColumn(self.entry.get())))
 
 		#---OK BUTTON---#
 		self.button = tk.Button(text="Ok")
 		self.button.config(width=3,height=1)
 		self.button.config(font=("Courier", 15))
-		self.button.place(x=120,y=850)		
+		self.button.place(x=120,y=865)		
 		self.button.config(relief="groove")
 		self.button.config(bg="tomato3")
 		self.button.config(command=lambda: self.setColumn(self.entry.get()))
@@ -140,13 +140,12 @@ class Column(Observer):
 		else:
 			self.sum.config(bg="dim gray")
 			self.type.config(bg="tomato3")
-
-		#list label
 		
 		#---COLUMN LIST---#
 		for column in self.subject.getState().columns:
-			self.columnList.insert(tk.END,column)
-		self.columnList.place(x=10,y=650)
+			if column not in self.columnList.get(0,len(self.subject.getState().columns)):
+				self.columnList.insert(tk.END,column)
+		self.columnList.place(x=10,y=690)
 		self.columnList.config(width=30,height=10)
 		self.columnList.config(bg="thistle2")
 
@@ -198,17 +197,15 @@ class Diagram(Observer):
 
 	def update(self):
 		#---UPDATE PLOT---#
-		plot = plt.Figure(figsize=(4,3), dpi=100)
-
-		if self.isCurrent:
-			plt.close(fig=plot)
+		plot = plt.Figure(figsize=(5,4))
 			
 		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
 			chart_type = FigureCanvasTkAgg(plot)
-			chart_type.get_tk_widget().place(x=10,y=280)				
-			df = self.subject[[self.column1,self.column2]]
-			df.plot(kind='line', legend=True, ax=ax)
+			chart_type.get_tk_widget().place(x=10,y=280)
+			new_index_subject = self.subject.set_index(self.column1)						
+			df = new_index_subject.loc[:,self.column2]
+			df.plot(kind='line', legend=True, ax=ax, xlabel = f"{self.column1}")
 			ax.set_title(f"{self.column1} ~ {self.column2}")
 
 			self.isCurrent = True
@@ -234,33 +231,33 @@ class Barplot(Observer):
 		#---INPUT LABEL---#
 		self.inputLabel = tk.Label()
 		self.inputLabel.config(text="Barplot Diagram")
-		self.inputLabel.place(x=450,y=130)
+		self.inputLabel.place(x=530,y=130)
 
 		#---USER INPUTS---#
 		self.firstColumnEntry = tk.Entry(bg="cyan3")
-		self.firstColumnEntry.place(x=450,y=170,width=100,height=30)
+		self.firstColumnEntry.place(x=530,y=170,width=100,height=30)
 
 		self.secondColumnEntry = tk.Entry(bg="cyan3")
-		self.secondColumnEntry.place(x=570,y=170,width=100,height=30)
+		self.secondColumnEntry.place(x=650,y=170,width=100,height=30)
 
 		#---OK BUTTON---#
 		self.button = tk.Button(text="Ok")
 		self.button.config(width=3,height=1)
 		self.button.config(font=("Courier", 15))
-		self.button.place(x=450,y=220)		
+		self.button.place(x=530,y=220)		
 		self.button.config(relief="groove")
 		self.button.config(bg="tomato3")
 		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
 
 	def update(self):
 		#---UPDATE PLOT---#
-		plot = plt.Figure(figsize=(4,3))
+		plot = plt.Figure(figsize=(5,4))
 			
 		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
 			chart_type = FigureCanvasTkAgg(plot)
-			chart_type.get_tk_widget().place(x=450,y=280)				
-			df = self.subject.groupby(self.column1)[self.column2].sum()
+			chart_type.get_tk_widget().place(x=530,y=280)		
+			df = self.subject.groupby(self.column1)[[self.column2]].sum()
 			df.plot(kind='bar', legend=True, ax=ax)
 			ax.set_title(f"")
 
@@ -287,32 +284,32 @@ class Scatterplot(Observer):
 		#---INPUT LABEL---#
 		self.inputLabel = tk.Label()
 		self.inputLabel.config(text="Scatterplot Diagram")
-		self.inputLabel.place(x=890,y=130)
+		self.inputLabel.place(x=1050,y=130)
 
 		#---USER INPUTS---#
 		self.firstColumnEntry = tk.Entry(bg="cyan3")
-		self.firstColumnEntry.place(x=890,y=170,width=100,height=30)
+		self.firstColumnEntry.place(x=1050,y=170,width=100,height=30)
 
 		self.secondColumnEntry = tk.Entry(bg="cyan3")
-		self.secondColumnEntry.place(x=1010,y=170,width=100,height=30)
+		self.secondColumnEntry.place(x=1170,y=170,width=100,height=30)
 
 		#---OK BUTTON---#
 		self.button = tk.Button(text="Ok")
 		self.button.config(width=3,height=1)
 		self.button.config(font=("Courier", 15))
-		self.button.place(x=890,y=220)		
+		self.button.place(x=1050,y=220)		
 		self.button.config(relief="groove")
 		self.button.config(bg="tomato3")
 		self.button.config(command=lambda: self.setColumn(self.firstColumnEntry.get(),self.secondColumnEntry.get()))
 
 	def update(self):
 		#---UPDATE PLOT---#
-		plot = plt.Figure(figsize=(4,3))
+		plot = plt.Figure(figsize=(5,4))
 			
 		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
 			chart_type = FigureCanvasTkAgg(plot)
-			chart_type.get_tk_widget().place(x=890,y=280)				
+			chart_type.get_tk_widget().place(x=1050,y=280)				
 			df = self.subject.groupby(self.column1)[self.column2].sum()
 			df.plot(kind='bar', legend=True, ax=ax)
 			ax.set_title(f"")
