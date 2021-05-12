@@ -2,6 +2,7 @@
 import abc
 import numpy as np
 import tkinter as tk
+from tkinter import Canvas
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -198,12 +199,13 @@ class Diagram(Observer):
 	def update(self):
 		#---UPDATE PLOT---#
 		plot = plt.Figure(figsize=(5,4))
+		canvas = Canvas()
 			
 		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
 			chart_type = FigureCanvasTkAgg(plot)
 			chart_type.get_tk_widget().place(x=10,y=280)
-			new_index_subject = self.subject.set_index(self.column1)						
+			new_index_subject = self.subject.set_index(self.column1).sort_values(self.column1)			
 			df = new_index_subject.loc[:,self.column2]
 			df.plot(kind='line', legend=True, ax=ax, xlabel = f"{self.column1}")
 			ax.set_title(f"{self.column1} ~ {self.column2}")
@@ -211,6 +213,11 @@ class Diagram(Observer):
 			self.isCurrent = True
 		elif self.column1 != "":
 			print("hibás oszlopok vannak megadva !")
+		elif self.column1 == "" and self.column2 == "":
+			label = tk.Label()
+			label.place(x=10,y=280)
+			label.config(bg="papaya whip")
+			label.config(width=71,height=27)
 
 	def setColumn(self,column1,column2):
 		self.column1 = column1
@@ -264,6 +271,11 @@ class Barplot(Observer):
 			self.isCurrent = True
 		elif self.column1 != "":
 			print("hibás oszlopok vannak megadva !")
+		elif self.column1 == "" and self.column2 == "":
+			label = tk.Label()
+			label.place(x=530,y=280)
+			label.config(bg="papaya whip")
+			label.config(width=71,height=27)
 
 	def setColumn(self,column1,column2):
 		self.column1 = column1
@@ -308,15 +320,21 @@ class Scatterplot(Observer):
 			
 		if self.column1 in self.subject.columns and self.column2 in self.subject.columns:
 			ax = plot.add_subplot(111)
-			chart_type = FigureCanvasTkAgg(plot)
-			chart_type.get_tk_widget().place(x=1050,y=280)				
-			df = self.subject.groupby(self.column1)[self.column2].sum()
-			df.plot(kind='bar', legend=True, ax=ax)
-			ax.set_title(f"")
+			ax.scatter(self.subject[self.column1],self.subject[self.column2])
+			scatter = FigureCanvasTkAgg(plot) 
+			scatter.get_tk_widget().place(x=1050,y=280)
+			ax.legend([self.column1]) 
+			ax.set_xlabel(self.column1)
+			ax.set_title(f'{self.column1} Vs. {self.column2}')
 
 			self.isCurrent = True
 		elif self.column1 != "":
 			print("hibás oszlopok vannak megadva !")
+		elif self.column1 == "" and self.column2 == "":
+			label = tk.Label()
+			label.place(x=1050,y=280)
+			label.config(bg="papaya whip")
+			label.config(width=71,height=27)
 
 	def setColumn(self,column1,column2):
 		self.column1 = column1
