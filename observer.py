@@ -177,7 +177,7 @@ class Diagram(Observer):
 
 		#---INPUT LABEL---#
 		self.inputLabel = tk.Label()
-		self.inputLabel.config(text="Korreláció Diagram")
+		self.inputLabel.config(text="Vonal Diagram")
 		self.inputLabel.place(x=10,y=130)
 
 		#---USER INPUTS---#
